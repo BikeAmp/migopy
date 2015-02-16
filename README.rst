@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/ClearcodeHQ/migopy.svg?branch=master
+    :target: https://travis-ci.org/ClearcodeHQ/migopy
+
 Migopy 1.0 - Mongo Migrations for Python
 =====================================
 
