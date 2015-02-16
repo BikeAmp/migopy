@@ -1,34 +1,29 @@
 Migopy 1.0 - Mongo Migrations for Python
-=====================================
+========================================
 
-Migopy is a simple python library which simply allows You to
-setup mongo migrations manager for Your fabfile (see fabfile.org). After that
-You will be able to run command like this::
+Migopy is a simple python library that allows you to setup mongo migrations
+manager for your fabfile (see fabfile.org). After that you will be able to
+run following commands::
 
-    fab migrations
+    fab migrations          # return status of all migrations
+    fab migrations:execute  # execute all not registered migrations
 
-which returns status of Your migrations, which are registered or not::
 
-    fab migrations:execute
+Each migration is provided as a seperate python file located in
+``mongomigrations`` directory.
 
-which execute not registered migrations.
-
-Each migration is treated as a seperate python file localized in mongomigrations
-directory.
-
-Information which migrations are registered or not is stored in 'migrations'
-collection in mongo database.
+Information which migrations are registered or not is stored in ``migrations``
+collection inside mongodb database.
 
 
 Quick start
-----------------
+-----------
 
 At first install migopy:
 
     pip install migopy
 
-then quickly configure mongo migrations in Your fabfile with basic
-informations
+then configure mongo migrations in your fabfile
 
 .. code-block:: python
 
@@ -45,24 +40,24 @@ informations
     # from fabric.api import task
     # migrations = task(Migrations.create_task())
 
-and You are done. Migrations files should be putted in 'mongomigrations'
-directory which is at the same level as fabfile.py and names of migrations files
-should fulfill default pattern:
+and you are ready to go. Migrations files should be put in ``mongomigrations``
+at the same level as fabfile.py. Names of migrations files should fulfill
+this pattern:
 
     (?P<migr_nr>[0-9]+)_[a-z0-9_]+\\.py
 
 Basic commands:
 
-* `fab migrations` - show unregistered migrations
-* `fab migrations:execute` - execute unregistered migrations
-* `fab migrations:ignore` - register unregistered migrations without executing them
-* `fab migrations:help` - show help about the migopy commands
+* ``fab migrations`` - show unregistered migrations
+* ``fab migrations:execute`` - execute unregistered migrations
+* ``fab migrations:ignore`` - register unregistered migrations without executing them
+* ``fab migrations:help`` - show help about the migopy commands
 
 Additional commands:
 
-* `fab migrations:execute,ex_1_ex.py` - execute specyfic migration
-* `fab migrations:rollback,ex_1_ex.py` - rollback specyfic migration (do down() function)
-* `fab migrations:ignore,ex_2_ex.py` - ignore specyfic migration
+* ``fab migrations:execute,ex_1_ex.py`` - execute specific migration
+* ``fab migrations:rollback,ex_1_ex.py`` - rollback specific migration (perform ``down()`` function)
+* ``fab migrations:ignore,ex_2_ex.py`` - ignore specific migration
 
 
 Structure of migration file:
@@ -77,16 +72,16 @@ Structure of migration file:
         db.notes.remove({'content': 'test'})
 
 
-where up() function is executed during fab migrations:execute command, and
-down() during fab migrations:rollback. Under db variable pymongo database
-object is given (pymongo.database.Database).
+where ``up()`` function is executed during ``fab migrations:execute`` command,
+and ``down()`` during ``fab migrations:rollback``. ``db`` parameter is a
+``pymongo.database.Database`` object.
 
 
 Handling different environments
-----------------
+-------------------------------
 
 It's common for Fabric to execute tasks on different environments, for
-example You probably would like to do that::
+example you probably would like to do that::
 
     fab staging migrations
     fab production migrations
@@ -120,22 +115,22 @@ Example of fabfile.py:
     migrations = Migrations.create_task()
 
 In the case above when we want to run migrations on remote machines, under
-the hood we have to run for example `fab staging migrations` command by
-fabric `run()` method. Migopy is not handling remote mongo connections from
-local fabric script so we need to raise `fab migrations` itself on remote
+the hood we have to run for example ``fab staging migrations`` command by
+fabric ``run()`` method. Migopy is not handling remote mongo connections from
+local fabric script so we need to raise ``fab migrations`` itself on remote
 machines.
 
-To do this we have to implement `task_hook()` class method. In the example
-task_hook simply recognize if we choose remote environment and if we does it
-runs itself by created string command, on remote machine and stop further
-execution (to stop raising migopy tasks on local).
+To do this we have to implement ``task_hook()`` class method. In the given
+example task_hook simply recognizes remote environment. If it is remote then it
+runs itself by created string command on remote machine and stops further
+execution (to stop execution of migopy tasks on local).
 
 
 More on migration files
-----------------
+-----------------------
 
-Migration files are quite flexible, if special mongo connection is needed or
-better integration with Mongokit You can import mongokit models or pymongo
+Migration files are quite flexible, if specific mongo connection or better
+integration with Mongokit is required you can import mongokit models or pymongo
 in migration file directly.
 
 Under the hood Migopy import each migration file as module and
@@ -150,10 +145,10 @@ executes up/down functions giving pymongo database object as an argument.
         note['name'] = 'test'
         note.save()
 
-in the case above, mongokitmodel handle mongo connection by it's own.
+in the case above mongokitmodel handles mongo connection by it's own.
 
 Further customization
-----------------
+---------------------
 
 Additional configuration
 
@@ -181,7 +176,7 @@ You can override selected methods
             ...
 
 
-You can add, additional migrations subtasks
+You can add additional migrations subtasks
 
 .. code-block:: python
 
@@ -202,7 +197,7 @@ You can add, additional migrations subtasks
 
 
 Setup for development
------------------
+---------------------
 ::
 
     $ git clone https://github.com/clearcode/migopy.git
@@ -225,7 +220,7 @@ All::
 
 
 Changes log
---------------
+-----------
 
 **1.0 (2014-01-14)**
 
