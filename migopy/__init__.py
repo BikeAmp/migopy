@@ -236,9 +236,10 @@ class MigrationsManager(object):
     @task
     def rollback(self, spec_migr):
         """Rollback specyfic migration"""
-        if spec_migr not in self.unregistered():
-            raise MigopyException(('Migration %s is not on unregistred ' +
-                                   'migrations list. Can not be executed') %
+        if spec_migr in self.unregistered():
+            raise MigopyException(('Migration %s is on unregistred ' +
+                                   'migrations list. ' +
+                                   'Can not be executed rollback') %
                                   spec_migr)
         spec_migr_name = re.sub('\.py$', '', spec_migr)
         with cwd_in_syspath():
