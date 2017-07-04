@@ -144,18 +144,13 @@ class MigrationsManager(object):
 
             return migr_files
 
-        def sort_func(fname1, fname2):
-            match1 = re.match(self.MIGRATIONS_FILE_PATTERN, fname1)
-            match2 = re.match(self.MIGRATIONS_FILE_PATTERN, fname2)
-
-            if not match1 or not match2:
+        def number_from_file_name(fname):
+            match = re.match(self.MIGRATIONS_FILE_PATTERN, fname)
+            if not match:
                 raise MigopyException(exc_msg)
+            return int(match.group('migr_nr'))
 
-            m1_nr = int(match1.group('migr_nr'))
-            m2_nr = int(match2.group('migr_nr'))
-            return cmp(m1_nr, m2_nr)
-
-        return sorted(migr_files, sort_func)
+        return sorted(migr_files, key=number_from_file_name)
 
     def unregistered(self):
         if not os.path.exists(self.MIGRATIONS_DIRECTORY):
@@ -323,6 +318,6 @@ class MigrationsManager(object):
                 pass
 
             except MigopyException as e:
-                cls.logger.red(e.message)
+                cls.logger.red(str(e))
 
         return migrations

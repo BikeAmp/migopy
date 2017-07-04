@@ -99,7 +99,7 @@ class MongoMigrationsBehavior(unittest.TestCase):
             with self.assertRaises(migopy.MigopyException) as cm:
                 self.migr_mng.unregistered()
 
-            self.assertTrue(cm.exception.message.startswith("Migrations dir"))
+            self.assertTrue(str(cm.exception).startswith("Migrations dir"))
 
     def test_it_prints_status_of_migrations(self):
         # given test directory
