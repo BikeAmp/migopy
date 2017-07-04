@@ -29,7 +29,7 @@ setup(
     packages=['migopy'],
     install_requires=[
         'pymongo',
-        'fabric',
+        'fabric3',
         'mock'
     ],
     classifiers=[
