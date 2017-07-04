@@ -73,7 +73,7 @@ class MongoMigrationsBehavior(unittest.TestCase):
         with self.assertRaises(migopy.MigopyException) as cm:
             self.migr_mng.sorted(migrations)
 
-        self.assertTrue(cm.exception.message.startswith('Founded'))
+        self.assertTrue(str(cm.exception).startswith('Found'))
 
         # when only one filename given, check correct name too
         with self.assertRaises(migopy.MigopyException):
@@ -94,7 +94,7 @@ class MongoMigrationsBehavior(unittest.TestCase):
             # creates __init__.py
             self.assertTrue(os.path.exists('mongomigrations/__init__.py'))
 
-            # when no migrations directory founded, raise exception
+            # when no migrations directory found, raise exception
             test_dir.clear()
             with self.assertRaises(migopy.MigopyException) as cm:
                 self.migr_mng.unregistered()

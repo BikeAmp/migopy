@@ -130,7 +130,7 @@ class MigrationsManager(object):
             self.collection = self.db[self.MIGRATIONS_COLLECTION]
 
     def sorted(self, migr_files):
-        exc_msg = "Founded incorrect name of migration file: %s\n" + \
+        exc_msg = "Found incorrect name of migration file: %s\n" + \
                   "Script aborted. Required pattern: " + \
                   self.MIGRATIONS_FILE_PATTERN
 
@@ -159,7 +159,7 @@ class MigrationsManager(object):
 
     def unregistered(self):
         if not os.path.exists(self.MIGRATIONS_DIRECTORY):
-            raise MigopyException("Migrations directory %s not founded" %
+            raise MigopyException("Migrations directory %s not found" %
                                   self.MIGRATIONS_DIRECTORY)
 
         initpy_path = '%s/__init__.py' % self.MIGRATIONS_DIRECTORY
@@ -235,11 +235,11 @@ class MigrationsManager(object):
 
     @task
     def rollback(self, spec_migr):
-        """Rollback specyfic migration"""
+        """Rollback specific migration"""
         if spec_migr in self.unregistered():
             raise MigopyException(('Migration %s is on unregistred ' +
                                    'migrations list. ' +
-                                   'Can not be executed rollback') %
+                                   'Can not execute rollback') %
                                   spec_migr)
         spec_migr_name = re.sub('\.py$', '', spec_migr)
         with cwd_in_syspath():
