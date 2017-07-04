@@ -176,10 +176,19 @@ class MongoMigrationsBehavior(unittest.TestCase):
         with self.assertRaises(migopy.MigopyException):
             self.migr_mng.ignore('3_test.py')
 
+    def test_it_rollback_unregistered_migration_fails(self):
+        """Test unregistered migrations are not rolled back."""
+        self.migr_mng.unregistered = mock.Mock(return_value=['1_test.py',
+                                                             '2_test.py'])
+        self.migr_mng.db = 'db_object'
+
+        with self.assertRaises(migopy.MigopyException):
+            self.migr_mng.rollback('1_test.py')
+
     def test_it_rollback_migration(self):
+        """Test registered migrations are rolled back."""
         with mock.patch('importlib.import_module') as im_mock:
-            self.migr_mng.unregistered = mock.Mock(return_value=['1_test.py',
-                                                                 '2_test.py'])
+            self.migr_mng.unregistered = mock.Mock(return_value=[])
             self.migr_mng.db = 'db_object'
             self.migr_mng.rollback('1_test.py')
             mdir = self.migr_mng.MIGRATIONS_DIRECTORY
@@ -193,10 +202,6 @@ class MongoMigrationsBehavior(unittest.TestCase):
             # and remove migration from register
             self.migr_mng.collection.remove \
                 .assert_has_calls([mock.call({'name': '1_test.py'})])
-
-            # when given specyfic migration is not found in unregistered
-            with self.assertRaises(migopy.MigopyException):
-                self.migr_mng.rollback('3_test.py')
 
     def test_it_create_task_for_fabfile(self):
         class Migrations(self.MockedMigrationsManager):
