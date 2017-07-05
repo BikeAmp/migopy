@@ -157,11 +157,15 @@ class MongoMigrationsIntegratedBehavior(unittest.TestCase):
 
     def test_it_do_fab_migrations_dbdump(self):
         self.assertEqual(len(glob('mongodumps/*')), 0)
+        # Insert something to create db and collection.
+        self.migr_mng.collection.insert({'foo': 'bar'})
         call('fab migrations:dbdump')
         self.assertEqual(len(glob('mongodumps/*')), 1)
 
     def test_it_do_dbdump_during_fab_migrations_execute(self):
         self.assertEqual(len(glob('mongodumps/*')), 0)
+        # Insert something to create db and collection.
+        self.migr_mng.collection.insert({'foo': 'bar'})
         self.tmp_dir.create_file('fabfile.py', fabfile_with_mongodump)
         call('fab migrations:execute')
         self.assertEqual(len(glob('mongodumps/*')), 1)
